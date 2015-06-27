@@ -7,8 +7,23 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// Additioanl imports
+// Database setup
 var mongoose = require('mongoose')
+
+// Find the appropriate database to connect to, defaulting to
+// localhost if we don't find one.  
+var uriString = 
+  process.env.MONGOLAB_URI || 
+  process.env.MONGOHQ_URL || 
+  'mongodb://localhost/personal-intelligence';
+
+mongoose.connect(uriString, function(err, res) {
+  if(err) {
+    console.log('ERROR connection to: ' + uristring + '. ' + err);
+  } else {
+    console.log('Succeeded connecting to: ' + uriString);
+  }
+});
 
 // Local imports
 var routes = require('./routes/index');
