@@ -1,3 +1,10 @@
+Personal Intelligence
+=====================
+
+Project for Greylock Hackfest 2015.
+
+Anna Wang, Nathaniel Okun, John Yang-Sammataro
+
 The MIT License (MIT)
 
 Copyright (c) 2015 Anna Wang, Nathaniel Okun, John Yang-Sammataro
