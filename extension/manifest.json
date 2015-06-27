@@ -1,0 +1,38 @@
+{
+  "manifest_version": 2,
+
+  "name": "Personal Intelligence",
+  "description": "This extension pops up information for a person's name on a webpage",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html",
+    "default_title": "Click here!"
+  },
+  "content_scripts": 
+    [
+        {
+            "matches":
+            [
+              "<all_urls>" 
+            ],
+            "js": 
+            [
+                "jquery.js", 
+                "hoverIntent.js", 
+                "Biograph.js"
+            ],
+            "css":
+            [
+              "mystyles.css"
+            ]
+        }
+    ],
+    
+    "permissions": 
+    [
+        "<all_urls>"
+    ]
+
+}
