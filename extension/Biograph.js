@@ -89,23 +89,22 @@ function scrapeData(html)
     var summary = $(html).find("#summary-item").find(".description").text();
     var imageLink = $(html).find(".profile-picture").find("img").prop("src");
 
-    if (headline && name && location && fieldOfStudy && summary && imageLink ){
-        var postData = {
-            "imgUrl": imageLink,
-            "age": 23,
-            "location": location,
-            "summary": summary,
-            "headline": headline,
-            "name": name,
-            "universities": ["Stanford"],
-            "position": [fieldOfStudy]
-        }
-        console.log(name);
-        $.post('https://personal-intelligence.herokuapp.com/api/people', postData ,function(res) {
-            console.log('posted succesfully');
-            console.log(res);
-        });
-    }
+    var postData = {
+        "imgUrl": imageLink,
+        "age": 23,
+        "location": location,
+        "summary": summary,
+        "headline": headline,
+        "name": name,
+        "universities": ["Stanford"],
+        "position": [fieldOfStudy]
+    };
+
+    console.log(name);
+    $.post('https://personal-intelligence.herokuapp.com/api/people', postData ,function(res) {
+        console.log('posted succesfully');
+        console.log(res);
+    });
 
 }
 
