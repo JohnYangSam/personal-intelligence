@@ -14,7 +14,7 @@ var PersonSchema = new Schema({
   summary:      String,
   location:     String,
   age:          { type: Number, min: 0, max: 120 },
-  img:          { data: Buffer, contentType: String },
+  imgUrl:       String,
 
   // Cut this down to just strings
   positions:    [String],
