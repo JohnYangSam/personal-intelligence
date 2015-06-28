@@ -105,7 +105,6 @@ function scrapeData(html)
         console.log('posted succesfully');
         console.log(res);
     });
-
 }
 
 function showTextData(object)
