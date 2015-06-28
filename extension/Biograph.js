@@ -24,6 +24,8 @@ $(document).ready(function()
         scrapeData(document.documentElement.innerHTML);
     }
 
+    console.log('inside document ready');
+
     document.onmousemove = function(e)
     {
         mouseX = (window.Event) ? e.pageX : event.clientX + document.body.scrollLeft;
@@ -32,22 +34,20 @@ $(document).ready(function()
 
     document.onmouseup = function(e)
     {
-        var text = getSelectedText();
-        
-        if(text.length > 0){
-            //insert query here
-           // showTextData("Not found",text);
+         var text = getSelectedText();
+         console.log(text);
+         $.get('https://personal-intelligence.herokuapp.com/api/people?name=test%20name', function(data) {
+            console.log(data);
 
             var object = {
-                "name" : "Anna Wang",
-                "summary" : "A fast learner looking for opportunities to develop innovative products and features.",
-                "location" : "San Francisco Bay Area",
+                "name" : data["name"],
+                "summary" : data["summary"],
+                "location" : data["location"],
                 "imageLink" : "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJsAAAAJGI2M2NjMzk5LWU1OGEtNDZkYS1iNjZjLTk3NGU2YmI4ZTM0NQ.jpg",
-                "headline" : "Software Engineering Intern at Uber"
+                "headline" : data["positions"][0]
             };
             showTextData(object);
-
-        }
+        })
     }
 
     var hiddenData = 
