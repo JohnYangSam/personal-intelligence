@@ -89,6 +89,9 @@ function scrapeData(html)
     var summary = $(html).find("#summary-item").find(".description").text();
     var imageLink = $(html).find(".profile-picture").find("img").prop("src");
 
+    if(!summary) {
+        summary = "";
+    }
     if (headline && name && location && fieldOfStudy && summary && imageLink ){
         var postData = {
             "imgUrl": imageLink,
