@@ -41,7 +41,11 @@ router.route('/people')
         if(err) {
           res.send(err)
         } else {
-          res.json(person)
+          if(person) {
+            res.json(person)
+          } else {
+            res.json({})
+          }
         }
       });
     } else {
