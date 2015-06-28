@@ -9,7 +9,7 @@ var Schema = mongoose.Schema;
 var PersonSchema = new Schema({
   updated:      { type: Date, default: Date.now },
 
-  name:         {type: String, required: true },
+  name:         String,
   headline:     String,
   summary:      String,
   location:     String,
