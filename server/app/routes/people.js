@@ -33,8 +33,27 @@ router.route('/people')
   })
 
   .get(function(req, res) {
-    Person.find()
-
+    // /api/people?name=<name>
+    // http://stackoverflow.com/questions/14417592/node-js-difference-between-req-query-and-req-params
+    console.log("Name Param:" + req.query.name)
+    if (req.query.name) {
+      Person.findOne({name: req.query.name}, function(err, person) {
+        if(err) {
+          res.send(err)
+        } else {
+          res.json(person)
+        }
+      });
+    } else {
+      // Find all people
+      Person.find(function(err, people) {
+        if(err) {
+          res.send(err)
+        } else {
+          res.json(people);
+        } 
+      });
+    }
   });
 
 module.exports = router;
