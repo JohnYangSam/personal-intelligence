@@ -3,6 +3,7 @@ var mouseY = 0;
 var popupWidth = 400;
 var popupCache = new Object();
 var debugMode = false;
+var popupShowing = false;
 
 function getSelectedText() {
     var text = "";
@@ -34,20 +35,23 @@ $(document).ready(function()
 
     document.onmouseup = function(e)
     {
-         var text = getSelectedText();
-         console.log(text);
-         $.get('https://personal-intelligence.herokuapp.com/api/people?name=test%20name', function(data) {
-            console.log(data);
+         if (popupShowing == false){
+             var text = getSelectedText();
+             if (text.length > 0){
+                 $.get('https://personal-intelligence.herokuapp.com/api/people?name=' + encodeURI(text), function(data) {
 
-            var object = {
-                "name" : data["name"],
-                "summary" : data["summary"],
-                "location" : data["location"],
-                "imageLink" : "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJsAAAAJGI2M2NjMzk5LWU1OGEtNDZkYS1iNjZjLTk3NGU2YmI4ZTM0NQ.jpg",
-                "headline" : data["positions"][0]
-            };
-            showTextData(object);
-        })
+
+                    var object = {
+                        "name" : data["name"],
+                        "summary" : data["summary"],
+                        "location" : data["location"],
+                        "imageLink" : data["imgUrl"],
+                        "headline" : data["positions"][0]
+                    };
+                    showTextData(object);
+                })
+            }
+        }
     }
 
     var hiddenData = 
@@ -62,7 +66,10 @@ $(document).ready(function()
 
     $('#biograph-popup-body').click(function()
     {
-        $('#biograph-popup').fadeOut();
+        if (popupShowing){
+            $('#biograph-popup').fadeOut();
+            popupShowing = false;
+        }
     });
 
     $(this).css('border-bottom', '1px dotted #6E9DBF');
@@ -82,11 +89,24 @@ function scrapeData(html)
     var summary = $(html).find("#summary-item").find(".description").text();
     var imageLink = $(html).find(".profile-picture").find("img").prop("src");
 
-    console.log(headline);
-    console.log(name);
-    console.log(location, fieldOfStudy);
-    console.log(summary);
-    console.log(imageLink);
+    if (headline && name && location && fieldOfStudy && summary && imageLink ){
+        var postData = {
+            "imgUrl": imageLink,
+            "age": 23,
+            "location": location,
+            "summary": summary,
+            "headline": headline,
+            "name": name,
+            "universities": ["Stanford"],
+            "position": [fieldOfStudy]
+        }
+        console.log(name);
+        $.post('https://personal-intelligence.herokuapp.com/api/people', postData ,function(res) {
+            console.log('posted succesfully');
+            console.log(res);
+        });
+    }
+
 }
 
 function showTextData(object)
@@ -112,4 +132,5 @@ function showTextData(object)
     $('#biograph-popup-body').html(object.summary);
     $('#biograph-popup-body').append($photo);
     $('#biograph-popup').fadeIn();
+    popupShowing = true;
 }
