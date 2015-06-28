@@ -19,11 +19,15 @@ $(document).ready(function()
     if(window.Event)
         window.captureEvents(Event.MOUSEMOVE | Event.DBLCLICK | Event.MOUSEUP);
 
+    //only scrape the data if you're at linkedin
+    if (window.location.host === "www.linkedin.com"){
+        scrapeData(document.documentElement.innerHTML);
+    }
+
     document.onmousemove = function(e)
     {
         mouseX = (window.Event) ? e.pageX : event.clientX + document.body.scrollLeft;
         mouseY = (window.Event) ? e.pageY : event.clientY + document.body.scrollTop;
-        $('#biograph-popup').fadeOut();
     };
 
     document.onmouseup = function(e)
@@ -32,41 +36,20 @@ $(document).ready(function()
         
         if(text.length > 0){
             //insert query here
+           // showTextData("Not found",text);
 
-            showTextData("Not found",text);
-            /*
-            $.getJSON("https://api.angel.co/1/search?query="+text+"&type=Startup", function(response){
-                if(response.length > 0) {
-                 $.getJSON("https://api.angel.co/1/startups/"+response[0].id, function(res){ 
-                    if(res.product_desc != "undefined" && res.product_desc != null){
-                        showAngelData(res);
-                    }
-                    else {
-                        $.getJSON("http://api.crunchbase.com/v/1/company/"+text+".js?api_key=ed9vfgjwhkugexmum2xwvjd3", function(data){
-                            if(data.description.length > 0){
-                                showCBdata(data);
-                            }
-                            else {
-                                showTextData("Not found",text);
-                            }
-                        });
-                    }
-                 });
-                }
-                else {
-                    $.getJSON("http://api.crunchbase.com/v/1/company/"+text+".js?api_key=ed9vfgjwhkugexmum2xwvjd3", function(data){
-                        if(data.description.length > 0){
-                            showCBdata(data);
-                        }
-                        else {
-                            showTextData("Not found",text);
-                        }
-                    });
-                }
-               });
-*/
+            var object = {
+                "name" : "Anna Wang",
+                "summary" : "A fast learner looking for opportunities to develop innovative products and features.",
+                "location" : "San Francisco Bay Area",
+                "imageLink" : "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJsAAAAJGI2M2NjMzk5LWU1OGEtNDZkYS1iNjZjLTk3NGU2YmI4ZTM0NQ.jpg",
+                "headline" : "Software Engineering Intern at Uber"
+            };
+            showTextData(object);
+
         }
     }
+
     var hiddenData = 
         '    <div id="biograph-popup" style="width:' + popupWidth + 'px;">' + 
         '        <div id="biograph-popup-title" style="font-weight:bold;"><br/>' +
@@ -76,46 +59,41 @@ $(document).ready(function()
         '    </div>';
         
     $('body').append(hiddenData);
+
+    $('#biograph-popup-body').click(function()
+    {
+        $('#biograph-popup').fadeOut();
+    });
+
     $(this).css('border-bottom', '1px dotted #6E9DBF');
 
 });
 
-
-function showCBdata(crunchbase)
+function scrapeData(html)
 {
-    var popupHeader = '';
-    var debugFooter = '';
+    console.log("inside scrap data");
+    var nameTwice = $(html).find("#name-container").find("span").text();
+    var length = nameTwice.length;
+    var name = nameTwice.substring(0,length/2);
     
-    popupHeader = crunchbase.name;
+    var headline = $(html).find("#headline-container").find(".title").text();
+    var location = $(html).find("#location-container").find("a")[0].innerHTML;
+    var fieldOfStudy = $(html).find("#location-container").find("a")[1].innerHTML;
+    var summary = $(html).find("#summary-item").find(".description").text();
+    var imageLink = $(html).find(".profile-picture").find("img").prop("src");
 
-    
-    $('#biograph-popup').css('left', (mouseX - popupWidth / 2) + 'px');
-    $('#biograph-popup').css('top',  (mouseY + 24) + 'px');
-    $('#biograph-popup-title').html(popupHeader);
-    $('#biograph-popup-body').html(crunchbase.description + debugFooter);
-    $('#biograph-popup').fadeIn();
+    console.log(headline);
+    console.log(name);
+    console.log(location, fieldOfStudy);
+    console.log(summary);
+    console.log(imageLink);
 }
 
-function showAngelData(ang)
+function showTextData(object)
 {
-    var popupHeader = '';
-    var debugFooter = '';
-    
-    popupHeader = ang.name;
-    
-    $('#biograph-popup').css('left', (mouseX - popupWidth / 2) + 'px');
-    $('#biograph-popup').css('top',  (mouseY + 24) + 'px');
-    $('#biograph-popup-title').html(popupHeader);
-    $('#biograph-popup-body').html(ang.product_desc + debugFooter);
-    $('#biograph-popup').fadeIn();
-}
-
-function showTextData(txt, name)
-{
-    var popupHeader = '';
-    var debugFooter = '';
-    
-    popupHeader = name;
+    var header = object.name;
+    var $photo = $('<img>').attr('src', object.imageLink).attr('width', '25%').attr('height','25%').attr('text-align', 'center');
+    console.log('photo', $photo);
 
     if(debugMode)
     {
@@ -127,7 +105,11 @@ function showTextData(txt, name)
     
     $('#biograph-popup').css('left', (mouseX - popupWidth / 2) + 'px');
     $('#biograph-popup').css('top',  (mouseY + 24) + 'px');
-    $('#biograph-popup-title').html(popupHeader);
-    $('#biograph-popup-body').html(txt + debugFooter);
+
+    //$name = $('h2').text()
+
+    $('#biograph-popup-title').text(header);
+    $('#biograph-popup-body').html(object.summary);
+    $('#biograph-popup-body').append($photo);
     $('#biograph-popup').fadeIn();
 }
